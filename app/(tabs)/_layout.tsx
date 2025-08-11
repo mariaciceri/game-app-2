@@ -21,9 +21,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="SteamPage"
+        name="Platforms"
         options={{
-          title: 'Steam Games',
+          title: 'Link Accounts',
           tabBarStyle: {
             backgroundColor: 'black',
             borderTopWidth: 0,
@@ -36,7 +36,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="AddGames"
         options={{
-          title: 'Add Games',
+          title: 'Games',
           tabBarStyle: {
             backgroundColor: 'black',
             borderTopWidth: 0,

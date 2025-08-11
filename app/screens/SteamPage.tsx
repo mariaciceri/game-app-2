@@ -2,10 +2,12 @@
 import React, { useState } from "react";
 import { Button, Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getGameList, setGameList } from "@/utils/AsyncStorage";
 
 type Game = {
     appid: number;
     name: string;
+    logo: string;
 }
 
 type GamesResponse = {
@@ -22,7 +24,7 @@ function renderGames(gamesOwned: GamesResponse | null): React.ReactNode {
             <View key={game.appid} style={styles.imageContainer}>
                 <Image
                     style={styles.gameImage}
-                    source={{uri: `https://cdn.akamai.steamstatic.com/steam/apps/${game.appid}/header.jpg`}}
+                    source={{ uri: `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg` }}
                 />
                 <Text style={styles.gameName}>{game.name}</Text>
             </View>
@@ -32,15 +34,41 @@ function renderGames(gamesOwned: GamesResponse | null): React.ReactNode {
 }
 
 function afterFetchingGames(userGames: GamesResponse | null, error: string): React.ReactNode {
+    if (userGames) {
+        saveSteamGames(userGames);
+    }
+
     return (
     <View style={styles.gamesOwnedContainer}>
         {error ? (
             <Text style={{ color: 'red' }}>{error}</Text>
         ) : (
             renderGames(userGames)
-        )}
+            )}
     </View>
     )
+}
+
+function saveSteamGames(games: GamesResponse | null) {
+    if (!games || !games.games || games.games.length === 0) return;
+
+    const formattedGames = games.games.map(game => ({
+        appid: game.appid,
+        name: game.name,
+        logo: `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`
+    }));
+
+    getGameList('games')
+    .then(currentGames => {
+        const updateGames = {
+            ...(currentGames || {}), // Spread operator to keep existing platforms
+            'Steam': formattedGames
+        };
+        return setGameList('games', updateGames);
+    })
+    .catch(err => {
+        console.error('Error saving Steam games:', err);
+    })
 }
 
 export default function SteamPage() {
@@ -79,8 +107,7 @@ export default function SteamPage() {
                                 throw new Error(`HTTP ${res.status}`)};
                             return res.json();
                         })
-                        .then(data => {setGames(data)
-                        console.log('data', data);})
+                        .then(data => setGames(data))
                         .catch(err => {
                             setError('Failed to fetch games. Please try again later.');
                         })

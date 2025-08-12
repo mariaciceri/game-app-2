@@ -1,11 +1,6 @@
 import React from "react";
 import { Image, ScrollView, Text, TouchableOpacity } from 'react-native';
-
-type GameRAWGSuggested = {
-    id: number;
-    name: string;
-    background_image: string;
-}
+import { GameRAWGSuggested } from "@/types/GameTypes";
 
 type Props = {
     suggestions: GameRAWGSuggested[];

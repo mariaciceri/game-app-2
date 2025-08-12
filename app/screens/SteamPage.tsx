@@ -2,82 +2,43 @@
 import React, { useState } from "react";
 import { Button, Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getGameList, setGameList } from "@/utils/AsyncStorage";
-
-type Game = {
-    appid: number;
-    name: string;
-    logo: string;
-}
-
-type GamesResponse = {
-    games: Game[];
-}
-
-function renderGames(gamesOwned: GamesResponse | null): React.ReactNode {
-    if (!gamesOwned || !gamesOwned.games || gamesOwned.games.length === 0) {
-        return <View><Text style={{color: 'white'}}>No games found.</Text></View>;
-    }
-    return (
-    <View style={styles.outerImageContainer}>
-        {gamesOwned.games.map(game => (
-            <View key={game.appid} style={styles.imageContainer}>
-                <Image
-                    style={styles.gameImage}
-                    source={{ uri: `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg` }}
-                />
-                <Text style={styles.gameName}>{game.name}</Text>
-            </View>
-        ))}
-    </View>
-    )
-}
-
-function afterFetchingGames(userGames: GamesResponse | null, error: string): React.ReactNode {
-    if (userGames) {
-        saveSteamGames(userGames);
-    }
-
-    return (
-    <View style={styles.gamesOwnedContainer}>
-        {error ? (
-            <Text style={{ color: 'red' }}>{error}</Text>
-        ) : (
-            renderGames(userGames)
-            )}
-    </View>
-    )
-}
-
-function saveSteamGames(games: GamesResponse | null) {
-    if (!games || !games.games || games.games.length === 0) return;
-
-    const formattedGames = games.games.map(game => ({
-        appid: game.appid,
-        name: game.name,
-        logo: `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`
-    }));
-
-    getGameList('games')
-    .then(currentGames => {
-        const updateGames = {
-            ...(currentGames || {}), // Spread operator to keep existing platforms
-            'Steam': formattedGames
-        };
-        return setGameList('games', updateGames);
-    })
-    .catch(err => {
-        console.error('Error saving Steam games:', err);
-    })
-}
+import { SteamGamesResponse } from "@/types/GameTypes";
+import saveSteamGames from "@/utils/SaveSteamGames";
+import renderGames from "@/components/SteamGameList";
 
 export default function SteamPage() {
 
     let [userId, setUserId] = useState<string>('');
-    const [userGames, setGames] = useState<GamesResponse | null>(null);
+    const [userGames, setGames] = useState<SteamGamesResponse | null>(null);
     const [error, setError] = useState<string>('');
 
-    
+    //TODO : Add a loading state to show a spinner while fetching games
+    const fetchGames = async() => {
+        try {
+            setError('');
+            setGames(null);
+            const res = await fetch(`https://us-central1-game-app-5aa9a.cloudfunctions.net/fetchSteamGames?vanityurl=${encodeURIComponent(userId)}`)
+            if (!res.ok) {
+                setError('Failed to fetch games. Please check your Steam ID or try again later.');
+                return;
+            }
+            const data: SteamGamesResponse = await res.json();
+            setGames(data);
+            saveSteamGames(data);
+            setUserId('');
+        } catch (err) {
+            console.error(err);
+            setError('An error occurred while fetching games. Please try again later.');
+        }
+    }
+
+    const renderContent = () => {
+        if (error) {
+            return <Text style={{ color: 'red' }}>{error}</Text>;
+        }
+        return renderGames(userGames);
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <Image
@@ -98,31 +59,26 @@ export default function SteamPage() {
                 <Button
                     title="Fetch Games"
                     color={'gray'}
-                    onPress={() => {
-                        setError('');
-                        setGames(null);
-                        fetch(`https://us-central1-game-app-5aa9a.cloudfunctions.net/fetchSteamGames?vanityurl=${encodeURIComponent(userId)}`)
-                            .then(res => {
-                            if (!res.ok) {
-                                throw new Error(`HTTP ${res.status}`)};
-                            return res.json();
-                        })
-                        .then(data => setGames(data))
-                        .catch(err => {
-                            setError('Failed to fetch games. Please try again later.');
-                        })
-                        .finally(() => setUserId(''))
-                    }}
+                    onPress={fetchGames}
                 />
             </View>
             <ScrollView style={styles.scrollContent}>
-                {userGames || error ? afterFetchingGames(userGames, error) : null }
+                {(userGames || error) && 
+                   ( <View>{renderContent()}</View> )
+                }
             </ScrollView>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    backgroundImage: {
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        opacity: 0.2,
+        zIndex: -1,
+    },
     container: {
         flex: 1,
         justifyContent: "center",
@@ -131,39 +87,13 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%",
     },
-    backgroundImage: {
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        opacity: 0.2,
-        zIndex: -1,
-    },
-    imageContainer: {
-        width: '48%',
-        height: 100,
-    },
     gamesContainer: {
         padding: '10%',
-    },
-    gameImage: {
-        height: '90%',
-    },
-    gameName: { 
-        color: 'white',
-        fontSize: 15,
-        position: 'absolute',
-        width: '70%',
-        zIndex: -1,
     },
     gamesOwnedContainer: {
         flexDirection: 'column',
         justifyContent: 'flex-start',
         padding: 10,
-    },
-    outerImageContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
     },
     textInput: { 
         height: 40,

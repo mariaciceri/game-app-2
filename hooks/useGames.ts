@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { getGameList, removeAllGames, setGameList } from "@/utils/AsyncStorage";
-
-type Game = {
-    appid: string;
-    name: string;
-    logo: string;
-};
+import { Game } from "@/types/GameTypes";
 
 export default function useGames() {
     const [games, setGames] = useState<Record<string, Game[]>>({});

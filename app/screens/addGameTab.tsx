@@ -10,7 +10,7 @@ export default function HomeScreen() {
     const { games, addGame, clearGames } = useGames();
     const [inputText, setInputText] = useState<string>('');
     const [backgroundImage, setBackgroundImage] = useState<string>('');
-    const [gameId, setGameId] = useState<string>('');
+    const [gameId, setGameId] = useState<number>(0);
     const [gamePlatform, setGamePlatform] = useState<string>('Select a game');
     const [error, setError] = useState<string>('');
     const [selectedGame, setSelectedGame] = useState<string>('');
@@ -22,11 +22,14 @@ export default function HomeScreen() {
         if (games[gamePlatform]?.some((g) => g.name.toLowerCase() === inputText.toLowerCase()))
             return setError("This game already exists.");
 
+        const finalGameId = gameId || Date.now();
+
         setError("");
-        addGame(gamePlatform, { appid: gameId, name: inputText, logo: backgroundImage });
+        addGame(gamePlatform, { appid: Number(finalGameId), name: inputText, logo: backgroundImage });
         setInputText("");
         setBackgroundImage("");
-        setGameId("");
+        setGameId(0);
+        setSelectedGame("");
     };
 
     return (
@@ -57,7 +60,7 @@ export default function HomeScreen() {
                 onSelect={(game) => {
                     setInputText(game.name);
                     setBackgroundImage(game.background_image);
-                    setGameId(game.id.toString());
+                    setGameId(game.id);
                     setSuggestions([]);
                     setSelectedGame('');
                 }}

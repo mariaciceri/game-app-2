@@ -20,7 +20,7 @@ export default function HomeScreen() {
         if (!inputText.trim()) return setError("Please enter a game name.");
         if (!gamePlatform) return setError("Please select a game platform.");
         if (games[gamePlatform]?.some((g) => g.name.toLowerCase() === inputText.toLowerCase()))
-            return setError("This game already exists.");
+            return setError("This game already exists."); 
 
         const finalGameId = gameId || Date.now();
 

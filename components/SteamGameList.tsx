@@ -1,4 +1,4 @@
-import { Button, Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { SteamGamesResponse } from "@/types/GameTypes";
 
 

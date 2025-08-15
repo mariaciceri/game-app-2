@@ -20,7 +20,7 @@ export default function GamePicker({ gamePlatform, onSelect } : GamePickerProps)
             onValueChange={(itemValue) => onSelect(itemValue)}
         >
             <Picker.Item label="Select a game" value="" color='white' />
-            <Picker.Item label="Play Station" value="Play Station" color='white' />
+            <Picker.Item label="PlayStation" value="PS" color='white' />
             <Picker.Item label="XBox" value="XBox" color='white' />
             <Picker.Item label="Nintendo" value="Nintendo" color='white' />
             <Picker.Item label="Game 4" value="Game 4" color='white' />

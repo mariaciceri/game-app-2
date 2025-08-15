@@ -1,6 +1,7 @@
 import { Image, ImageBackground, StyleSheet, View } from "react-native";
 
 export default function Index() {
+
   return (
     <View style={styles.container}>
       <ImageBackground

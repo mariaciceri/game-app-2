@@ -1,10 +1,15 @@
 export type Game = {
-    appid: number;
+    appid: number | string;
     name: string;
     logo: string;
 }
 
 export type SteamGamesResponse = {
+    games: Game[];
+}
+
+export type PSGamesResponse = {
+    total: number;
     games: Game[];
 }
 

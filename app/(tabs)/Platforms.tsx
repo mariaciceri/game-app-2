@@ -2,7 +2,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import React from "react";
 import { SafeAreaView } from "react-native";
 import SteamPage from '../screens/SteamPage';
-import EpicGamesPage from '../screens/EpicGamesPage';
+import PlayStationPage from '../screens/PlayStationTab';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -10,7 +10,7 @@ function MyTabs() {
     return (
         <Tab.Navigator>
             <Tab.Screen name="Steam" component={SteamPage} />
-            <Tab.Screen name="Epic Games" component={EpicGamesPage} />
+            <Tab.Screen name="PlayStation Games" component={PlayStationPage} />
         </Tab.Navigator>
     );
 }

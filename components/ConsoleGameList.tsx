@@ -1,8 +1,8 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import { PSGamesResponse } from "@/types/GameTypes";
+import { ConsoleGamesResponse } from "@/types/GameTypes";
 
 
-export default function renderGames(gamesOwned: PSGamesResponse | null): React.ReactNode {
+export default function renderGames(gamesOwned: ConsoleGamesResponse | null): React.ReactNode {
     if (!gamesOwned || !gamesOwned.games || gamesOwned.games.length === 0) {
         return (
             <View>

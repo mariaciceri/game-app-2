@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Button, Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { PSGamesResponse } from '@/types/GameTypes';
-import renderGames from '@/components/PSGameList';
-import savePSGames from '@/utils/SavePSGames';
+import { ConsoleGamesResponse } from '@/types/GameTypes';
+import renderGames from '@/components/ConsoleGameList';
+import saveConsoleGames from '@/utils/SaveConsoleGames';
 
 export default function PlayStationPage() {
 
     let [username, setUsername] = useState<string>('');
-    const [userGames, setGames] = useState<PSGamesResponse | null>(null);
+    const [userGames, setGames] = useState<ConsoleGamesResponse | null>(null);
     const [error, setError] = useState<string>('');
 
     const fetchGames = async() => {
@@ -19,10 +19,10 @@ export default function PlayStationPage() {
                 setError('Failed to fetch games. Please check your username or try again later.');
                 return;
             }
-            const data: PSGamesResponse = await res.json();
+            const data: ConsoleGamesResponse = await res.json();
             setGames(data);
             setUsername('');
-            savePSGames(data);
+            saveConsoleGames(data, 'PS');
         } catch (err) {
             console.error(err);
             setError('An error occurred while fetching games. Please try again later.');

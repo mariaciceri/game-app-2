@@ -8,7 +8,7 @@ export type SteamGamesResponse = {
     games: Game[];
 }
 
-export type PSGamesResponse = {
+export type ConsoleGamesResponse = {
     total: number;
     games: Game[];
 }

@@ -1,19 +1,21 @@
 import { getGameList, setGameList } from "./AsyncStorage";
-import { PSGamesResponse } from "@/types/GameTypes";
+import { ConsoleGamesResponse } from "@/types/GameTypes";
 
-export default function savePSGames(games: PSGamesResponse | null) {
+export default function saveConsoleGames(games: ConsoleGamesResponse | null, platform: string) {
     if (!games || !games.games || games.games.length === 0) return;
 
     getGameList('games')
         .then(currentGames => {
             const updateGames = {
                 ...(currentGames || {}), // Spread operator to keep existing platforms
-                'PS': [...(currentGames['PS'] || []), ...(games.games || [])]
+                [platform]: [
+                    ...(currentGames?.[platform] || []),
+                    ...(games.games || [])]
             };
             return setGameList('games', updateGames);
         })
         .catch(err => {
-            console.error('Error saving PlayStation games:', err);
+            console.error('Error saving Console games:', err);
         })
 }
 

@@ -26,10 +26,22 @@ export default function useGames() {
         await setGameList("games", updatedGames);
     };
 
+    const deleteGame = async (platform: string, appid: number | string) => {
+        const updatedGames = { ...games };
+        if (updatedGames[platform]) {
+            updatedGames[platform] = updatedGames[platform].filter(game => game.appid !== appid);
+            if (updatedGames[platform].length === 0) {
+                delete updatedGames[platform];
+            }
+        }
+        setGames(updatedGames);
+        await setGameList("games", updatedGames);
+    }
+
     const clearGames = async () => {
         await removeAllGames();
         setGames({});
     };
 
-    return { games, error, addGame, clearGames };
+    return { games, error, addGame, deleteGame, clearGames };
 }

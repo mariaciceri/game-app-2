@@ -1,12 +1,33 @@
 import React from "react";
-import { ScrollView, Text, View, Image } from "react-native";
+import { ScrollView, Text, View, Image, Button } from "react-native";
 import { Game } from "@/types/GameTypes";
+import useGames from "@/hooks/useGames";
 
 type Props = {
     games: Record<string, Game[]>;
+    setAddedGames: React.Dispatch<React.SetStateAction<Record<string, Game[]>>>;
 }
 
-export default function GameList({games} : Props) {
+export default function GameList({games, setAddedGames} : Props) {
+    const { deleteGame } = useGames();
+
+    const handleDelete = (platform: string, appid: number | string) => {
+        deleteGame(platform, appid);
+
+        setAddedGames(prev => {
+            const updated = {
+                ...prev,
+                [platform]: (prev[platform] || []).filter(game => game.appid !== appid)
+            };
+
+            if (updated[platform].length === 0) {
+                delete updated[platform];
+            }
+
+            return updated;
+        });
+    };
+
 
     return (
         <ScrollView style={{ width: '80%', marginTop: 20 }}>
@@ -26,6 +47,9 @@ export default function GameList({games} : Props) {
                                         source={ game.logo ? { uri: game.logo } : require('@/assets/images/logo.png') }
                                         style={{ width: 50, height: 50, marginVertical: 5 }}
                                     />
+                                    <Button title="X"
+                                        key={game.appid}
+                                        onPress={() => handleDelete(platform, game.appid) } />
                                 </View>
                             ))}
                         </View>

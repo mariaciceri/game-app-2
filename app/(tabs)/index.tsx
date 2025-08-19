@@ -32,18 +32,4 @@ const styles = StyleSheet.create({
     height: "100%",
     opacity: 0.8,
   },
-  buttonOne: {
-    width: '100%',
-    height: '10%',
-    backgroundColor: 'lightblue',
-  },
-  buttonTwo: {
-    width: '100%',
-    height: '10%',
-    backgroundColor: 'darkturquoise',
-  },
-  buttonPlace: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  }
 });

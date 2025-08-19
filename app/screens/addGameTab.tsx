@@ -5,9 +5,11 @@ import GamePicker from '@/components/GamePicker';
 import GameList from '@/components/GameList';
 import useGameSuggestions from "@/hooks/useGameSuggestions";
 import useGames from "@/hooks/useGames";
+import { Game } from "@/types/GameTypes";
 
 export default function HomeScreen() {
     const { games, addGame, clearGames } = useGames();
+    const [addedGames, setAddedGames] = useState<Record<string, Game[]>>({});
     const [inputText, setInputText] = useState<string>('');
     const [backgroundImage, setBackgroundImage] = useState<string>('');
     const [gameId, setGameId] = useState<number>(0);
@@ -23,9 +25,15 @@ export default function HomeScreen() {
             return setError("This game already exists."); 
 
         const finalGameId = gameId || Date.now();
+        const game: Game = { appid: Number(finalGameId), name: inputText, logo: backgroundImage }
+        const addedGame = {
+            ...addedGames,
+            [gamePlatform]: [...(addedGames[gamePlatform] || []), game]
+        };
 
         setError("");
-        addGame(gamePlatform, { appid: Number(finalGameId), name: inputText, logo: backgroundImage });
+        addGame(gamePlatform, game);
+        setAddedGames(addedGame);
         setInputText("");
         setBackgroundImage("");
         setGameId(0);
@@ -72,7 +80,7 @@ export default function HomeScreen() {
 
             {error ? <Text style={{ color: 'red', marginTop: 10 }}>{error}</Text> : null}
             
-            <GameList games={games} />
+            <GameList games={addedGames} setAddedGames={setAddedGames}/>
 
             <Button title="Remove All Games" color={'red'} onPress={clearGames} />
         </View>

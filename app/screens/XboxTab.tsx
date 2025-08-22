@@ -46,7 +46,7 @@ export default function XboxPage() {
             <View style={styles.gamesContainer}>
                 <TextInput
                     style={styles.textInput}
-                    placeholder="Insert your PSN Username"
+                    placeholder="Insert your XBox Username"
                     placeholderTextColor="lightgray"
                     onChangeText={text => {
                         setUsername(text.toLowerCase().trim());

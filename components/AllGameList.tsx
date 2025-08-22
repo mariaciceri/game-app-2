@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView, Text, View, Image, Pressable } from "react-native";
 import { StyleSheet } from "react-native";
 import { Game } from "@/types/GameTypes";
@@ -10,6 +10,13 @@ type Props = {
 
 export default function AllGameList({games} : Props) {
     const { deleteGame } = useGames();
+    const [isOpen, setIsOpen] = useState<Record<string, boolean>>({'PS': false, 'Steam': false, 'XBox': false});
+
+    const platformImages: Record<string, any> = {
+        Steam: require('@/assets/images/steam.webp'),
+        XBox: require('@/assets/images/xbox.webp'),
+        PS: require('@/assets/images/playstation.webp'),
+    };
 
     return (
         <ScrollView style={ styles.container }>
@@ -17,24 +24,31 @@ export default function AllGameList({games} : Props) {
                 {Object.keys(games).length > 0 ? (
                     Object.entries(games).map(([platform, gameList]) => (
                         <View key={platform} style={ styles.platformView }>
-                            <Text style={ styles.headerText }>
-                                {platform}:
-                            </Text>
+                            <Pressable
+                                style={ styles.headerView }
+                                onPress={() => setIsOpen({...isOpen, [platform]: !isOpen[platform]})}
+                                >
+                                <Image 
+                                    source={platformImages[platform]} 
+                                    style={ styles.platformImage}
+                                />
+                            </Pressable>
                             
-                            {gameList.map((game) => (
-                                <View key={game.appid}
-                                style={ styles.gameView }>
-                                    <Image
-                                        source={ game.logo ? { uri: game.logo } : require('@/assets/images/logo.png') }
-                                        style={ styles.gameImage }
-                                    />
-                                    <Text style={ styles.gameName }>{game.name}</Text>
-                                    <Pressable style={ styles.button }
-                                        onPress={() => deleteGame(platform, game.appid)}>
-                                        <Text style={ styles.buttonText }>x</Text>
-                                    </Pressable>
-                                </View>
-                            ))}
+                            {isOpen[platform] && gameList.map((game) => (
+                                    <View key={game.appid}
+                                        style={styles.gameView}>
+                                        <Image
+                                            source={game.logo ? { uri: game.logo } : require('@/assets/images/logo.png')}
+                                            style={styles.gameImage}
+                                        />
+                                        <Text style={styles.gameName}>{game.name}</Text>
+                                        <Pressable style={styles.button}
+                                            onPress={() => deleteGame(platform, game.appid)}>
+                                            <Text style={styles.buttonText}>x</Text>
+                                        </Pressable>
+                                    </View>
+                                ))
+                            }
                         </View>
                     ))
                 ) : (
@@ -84,13 +98,20 @@ const styles = StyleSheet.create({
         width: '33%',
         alignItems: 'center',
     },
-    headerText: { 
+    headerView: { 
         color: 'white', 
         fontSize: 18,
         width: '100%',
     },
     outerView: { 
         marginHorizontal: 20
+    },
+    platformImage: { 
+        width: 200,
+        height: 100,
+        marginLeft: 10,
+        borderRadius: 10,
+        backgroundColor: colors.secondary,
     },
     platformView: {
         flexDirection: 'row',

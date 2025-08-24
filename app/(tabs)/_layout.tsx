@@ -21,7 +21,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Platforms"
+        name="Accounts"
         options={{
           title: 'Link Accounts',
           tabBarStyle: {
@@ -34,7 +34,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="AddGames"
+        name="Games"
         options={{
           title: 'Games',
           tabBarStyle: {

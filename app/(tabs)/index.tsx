@@ -1,7 +1,7 @@
-import { Image, ImageBackground, StyleSheet, View } from "react-native";
+import { Image, ImageBackground, Text, StyleSheet, View } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 export default function Index() {
-
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -10,6 +10,7 @@ export default function Index() {
         <Image
           style={styles.logo}
           source={require('@/assets/images/logo.png')} />
+      <Text style={styles.explanationText}>EXPLANATION TEXT GOES HERE</Text>
       </ImageBackground>
     </View>
   );
@@ -18,18 +19,29 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: "100%",
-  },
-  logo: {
-    width: 200,
-    height: 200,
-    alignSelf: "center",
-    marginTop: '20%',
   },
   backgroundImage: {
     flex: 1,
     width: "100%",
     height: "100%",
     opacity: 0.8,
+  },
+  explanationText: {
+    backgroundColor: Colors.light,
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: '30%',
+    padding: 20,
+    width: "80%",
+    alignSelf: "center",
+    borderRadius: 10,
+    borderColor: 'black',
+    borderWidth: 1,
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    alignSelf: "center",
+    marginTop: '20%',
   },
 });

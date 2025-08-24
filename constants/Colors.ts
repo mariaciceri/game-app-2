@@ -1,9 +1,13 @@
 const primary = 'darkturquoise';
-const secondary = '#9356a3';
+const secondary = '#444054';
+const light = '#FCEFEF';
+const dark = '#1E1E24'
 
 export const Colors = {
   primary,
-  secondary
+  secondary,
+  light,
+  dark
 };
 
 // example:

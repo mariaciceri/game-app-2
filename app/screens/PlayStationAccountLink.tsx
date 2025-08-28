@@ -11,8 +11,7 @@ import useFetchUserAccount from '@/hooks/fetchUserAccount';
 export default function PlayStationPage() {
     let [username, setUsername] = useState<string>('');
     const [error, setError] = useState<string>('');
-    const { linked, setLinked } = useFetchUserAccount('PS');
-    const { connectedUser, setConnectedUser } = useFetchUserAccount('PS');
+    const { connectedUser, setConnectedUser, linked, setLinked } = useFetchUserAccount('PS');
 
     const fetchGames = async() => {
         try {

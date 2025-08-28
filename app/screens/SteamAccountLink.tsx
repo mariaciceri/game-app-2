@@ -4,14 +4,18 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { SteamGamesResponse } from "@/types/GameTypes";
 import saveSteamGames from "@/utils/SaveSteamGames";
 import { Colors } from "@/constants/Colors";
+import saveAccountInfo from '@/utils/AccountStorage';
+import useFetchUserAccount from '@/hooks/fetchUserAccount';
+
 
 export default function SteamPage() {
 
     let [userId, setUserId] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const { connectedUser, setConnectedUser, linked, setLinked } = useFetchUserAccount('Steam');
 
     //TODO : Add a loading state to show a spinner while fetching games
-    const fetchGames = async() => {
+    const fetchGames = async () => {
         try {
             setError('');
             const res = await fetch(`https://us-central1-game-app-5aa9a.cloudfunctions.net/fetchSteamGames?vanityurl=${encodeURIComponent(userId.toLowerCase().trim())}`)
@@ -20,7 +24,10 @@ export default function SteamPage() {
                 return;
             }
             const data: SteamGamesResponse = await res.json();
+            setConnectedUser(userId);
             saveSteamGames(data);
+            setLinked(true);
+            saveAccountInfo(userId, 'Steam');
             setUserId('');
         } catch (err) {
             console.error(err);
@@ -31,7 +38,7 @@ export default function SteamPage() {
     return (
         <>
             <View style={styles.gamesContainer}>
-                <TextInput 
+                <TextInput
                     style={styles.textInput}
                     placeholder="Insert your Steam Account Id"
                     placeholderTextColor={Colors.secondary}
@@ -41,11 +48,25 @@ export default function SteamPage() {
                     }}
                     value={userId}
                 />
-                <Button
-                    title="Fetch Games"
-                    color={'gray'}
-                    onPress={fetchGames}
-                />
+                {!linked && (
+                    <Button
+                        title="Fetch Games"
+                        color={'gray'}
+                        onPress={fetchGames}
+                    />
+                )}
+                {linked && (
+                    <>
+                        <Text style={styles.linkedText}>You are linked as {connectedUser}</Text>
+                        <Button
+                            title="Unlink Account"
+                            color={'gray'}
+                            onPress={() => {
+                                // TODO: Implement unlink account functionality
+                            }}
+                        />
+                    </>
+                )}            
             </View>
             {error && <Text style={styles.error}>{error}</Text>}
         </>
@@ -61,12 +82,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
     },
+    linkedText: {
+        color: Colors.secondary,
+    },
     textInput: {
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
-        width: '100%',
         minWidth: '100%',
+        borderRadius: 5,
         color: Colors.dark,
         paddingHorizontal: 10
     },

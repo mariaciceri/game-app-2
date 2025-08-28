@@ -8,11 +8,12 @@ export default function useFetchUserAccount(platform: string) {
     useEffect(() => {
         const fetchAccountInfo = async () => {
             const accountInfo = await getAccountInfo("accounts");
-            setConnectedUser(accountInfo?.[platform] || null);
-            setLinked(accountInfo ? true : false);
+            const user = accountInfo?.[platform] || null;
+            setConnectedUser(user);
+            setLinked(Boolean(user));
         };
         fetchAccountInfo();
-    }, []);
+    }, [platform]);
 
     return { connectedUser, setConnectedUser, linked, setLinked };
 }

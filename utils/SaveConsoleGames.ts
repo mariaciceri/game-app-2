@@ -1,16 +1,16 @@
-import { getGameList, setGameList } from "./AsyncStorage";
+import { getAccountInfo, setGameList } from "./AsyncStorage";
 import { ConsoleGamesResponse } from "@/types/GameTypes";
 
 export default function saveConsoleGames(games: ConsoleGamesResponse | null, platform: string) {
     if (!games || !games.games || games.games.length === 0) return;
 
-    getGameList('games')
+    getAccountInfo('games')
         .then(currentGames => {
             const updateGames = {
                 ...(currentGames || {}), // Spread operator to keep existing platforms
                 [platform]: [
                     ...(currentGames?.[platform] || []),
-                    ...(games.games || [])]
+                    ...(games.games)]
             };
             return setGameList('games', updateGames);
         })
@@ -19,4 +19,4 @@ export default function saveConsoleGames(games: ConsoleGamesResponse | null, pla
         })
 }
 
-// Make a check to ensure that some games were not already saved manually
+// TODO: Make a check to ensure that some games were not already saved manually

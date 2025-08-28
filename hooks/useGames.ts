@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getGameList, removeAllGames, setGameList } from "@/utils/AsyncStorage";
+import { getAccountInfo, removeAllGames, setGameList } from "@/utils/AsyncStorage";
 import { Game } from "@/types/GameTypes";
 
 export default function useGames() {
@@ -9,7 +9,7 @@ export default function useGames() {
     useEffect(() => {
         (async () => {
             try {
-                const storedGames = await getGameList("games");
+                const storedGames = await getAccountInfo("games");
                 setGames(storedGames || {});
             } catch {
                 setError("Error fetching games.");

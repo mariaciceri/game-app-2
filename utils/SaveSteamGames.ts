@@ -1,4 +1,4 @@
-import { getGameList, setGameList } from "./AsyncStorage";
+import { getAccountInfo, setGameList } from "./AsyncStorage";
 import { SteamGamesResponse } from "@/types/GameTypes";
 
 export default function saveSteamGames(games: SteamGamesResponse | null) {
@@ -10,7 +10,7 @@ export default function saveSteamGames(games: SteamGamesResponse | null) {
         logo: `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`
     }));
 
-    getGameList('games')
+    getAccountInfo('games')
         .then(currentGames => {
             const updateGames = {
                 ...(currentGames || {}), // Spread operator to keep existing platforms

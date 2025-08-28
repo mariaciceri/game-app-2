@@ -9,7 +9,16 @@ export const setGameList = async(key: string, value: object | any[]) => {
     }
 }
 
-export const getGameList = async(key: string) => {
+export const setAccountInfo = async(key: string, value: object) => {
+    try {
+        await AsyncStorage.setItem(key, JSON.stringify(value));
+    }
+    catch (error) {
+        console.error('Error saving account info', error);
+    }
+}
+
+export const getAccountInfo = async(key: string) => {
     try {
         const value = await AsyncStorage.getItem(key);
         if (value !== null) {

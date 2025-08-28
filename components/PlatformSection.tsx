@@ -22,8 +22,8 @@ export default function PlatformSection({ platform, gameList, isOpen, onToggle }
                 onPress={onToggle}
                 >
                 <Image
-                    source={PlatformImages[typedPlatform]} 
-                    style={ styles.platformImage}
+                    source={ PlatformImages[typedPlatform] } 
+                    style={ styles.platformImage }
                 />
             </Pressable>
             
@@ -50,12 +50,13 @@ const styles = StyleSheet.create({
         height: 100,
         marginLeft: 10,
         borderRadius: 10,
-        backgroundColor: Colors.secondary,
+        borderWidth: 1,
+        borderColor: Colors.dark,
     },
     platformView: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
-        marginBottom: 20
+        marginBottom: 20,
     },
 })

@@ -9,9 +9,10 @@ import SteamPage from "../screens/SteamAccountLink";
 export default function Accounts() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Connected Accounts</Text>
-      <Text style={styles.description}>Manage your connected accounts here.</Text>
-
+      <View style={styles.header}>
+        <Text style={styles.title}>Connected Accounts</Text>
+        <Text style={styles.description}>Manage your connected accounts here.</Text>
+      </View>
       <PlayStationPage />
       <XboxPage />
       <SteamPage />
@@ -24,7 +25,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.light,
+    backgroundColor: "white",
+  },
+  header: {
+    position: "absolute",
+    top: 100,
+    left: 20,
   },
   title: {
     fontSize: 24,

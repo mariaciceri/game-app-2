@@ -9,20 +9,20 @@ const Tab = createMaterialTopTabNavigator();
 function MyTabs() {
     return (
         <>
-            <StatusBar backgroundColor={Colors.primary} />
+            <StatusBar backgroundColor={Colors.light} />
             <Tab.Navigator
                 screenOptions={{
-                    tabBarActiveTintColor: Colors.primary,
+                    tabBarActiveTintColor: Colors.secondary,
                     tabBarInactiveTintColor: "gray",
                     tabBarStyle: {
-                backgroundColor: Colors.secondary,
+                backgroundColor: Colors.primary,
                 },
                 tabBarLabelStyle: { 
                     fontWeight: 'bold',
                     fontSize: 16,
                 },
                 tabBarIndicatorStyle: {
-                        backgroundColor: Colors.primary,
+                        backgroundColor: Colors.secondary,
                     },
             }}>
                 <Tab.Screen name="All Games" component={ProfileScreen} />
@@ -34,7 +34,7 @@ function MyTabs() {
 
 export default function Games() {
     return (
-        <SafeAreaView style={{ flex:1, backgroundColor: Colors.secondary }}>
+        <SafeAreaView style={{ flex:1, backgroundColor: Colors.primary }}>
             <MyTabs />
         </SafeAreaView>
     );

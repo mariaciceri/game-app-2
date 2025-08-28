@@ -3,6 +3,7 @@ import { ScrollView, Text, View } from "react-native";
 import { StyleSheet } from "react-native";
 import { Game } from "@/types/GameTypes";
 import PlatformSection from "./PlatformSection";
+import { Colors } from "@/constants/Colors";
 
 type Props = {
     games: Record<string, Game[]>;
@@ -27,7 +28,10 @@ export default function AllGameList({games} : Props) {
                         )
                     })
                 ) : (
-                    <Text style={{ color: 'white' }}>No games added yet.</Text>
+                    <Text style={ styles.noGamesText}>
+                        No games added yet. Go to 'Link Accounts' tab to connect your gaming accounts 
+                        and retrieve your games or to 'Add Game' tab to add games manually.
+                    </Text>
                 )}
             </View>
         </ScrollView>
@@ -37,7 +41,16 @@ export default function AllGameList({games} : Props) {
 const styles = StyleSheet.create({
     container: { 
         width: '100%',
-        marginTop: 20 
+        marginTop: 20,
+    },
+    noGamesText: {
+        borderColor: Colors.dark,
+        borderRadius: 5,
+        borderWidth: 1,
+        padding: 10,
+        margin: 10,
+        backgroundColor: Colors.light,
+        fontSize: 14,
     },
     outerView: { 
         marginHorizontal: 20

@@ -1,5 +1,7 @@
 import React from "react";
 import { Picker } from '@react-native-picker/picker';
+import { StyleSheet } from "react-native";
+import { Colors } from '@/constants/Colors';
 
 type GamePickerProps = {
     gamePlatform: string;
@@ -10,13 +12,7 @@ export default function GamePicker({ gamePlatform, onSelect } : GamePickerProps)
     return (
         <Picker
             selectedValue={gamePlatform}
-            style={{
-                height: '30%',
-                width: '80%',
-                backgroundColor: 'black',
-                marginTop: 20
-            }}
-            dropdownIconColor="white"
+            style={ styles.picker }
             onValueChange={(itemValue) => onSelect(itemValue)}
         >
             <Picker.Item label="Select a game" value="" color='white' />
@@ -29,3 +25,12 @@ export default function GamePicker({ gamePlatform, onSelect } : GamePickerProps)
         </Picker>
     )
 }
+
+const styles = StyleSheet.create({
+    picker: {
+        height: '30%',
+        width: '90%',
+        backgroundColor: Colors.light,
+        marginTop: 20
+    }
+})

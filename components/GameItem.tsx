@@ -13,15 +13,15 @@ export default function GameItem({ game, platform }: Props) {
     const { deleteGame } = useGames();
 
     return (
-        <View style={styles.gameView}>
+        <View style={ styles.gameView }>
             <Image
-                source={game.logo ? { uri: game.logo } : require('@/assets/images/logo.png')}
-                style={styles.gameImage}
+                source={ game.logo ? { uri: game.logo } : require('@/assets/images/logo.png') }
+                style={ styles.gameImage }
             />
-            <Text style={styles.gameName}>{game.name}</Text>
-            <Pressable style={styles.button}
+            <Text style={ styles.gameName }>{ game.name }</Text>
+            <Pressable style={ styles.button }
                 onPress={() => deleteGame(platform, game.appid)}>
-                <Text style={styles.buttonText}>x</Text>
+                <Text style={ styles.buttonText }>x</Text>
             </Pressable>
         </View>
     )
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     gameName: {
-        color: 'lightgray',
+        color: Colors.dark,
         maxWidth: 100,
         textAlign: 'center',
     },

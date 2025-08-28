@@ -1,14 +1,15 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { Colors } from '@/constants/Colors';
 
 export default function TabLayout() {
   return (
     <Tabs screenOptions={{
       headerShown: false,
-      tabBarActiveTintColor: 'black',
-      tabBarInactiveTintColor: 'dimgray',
+      tabBarActiveTintColor: Colors.dark,
+      tabBarInactiveTintColor: 'gray',
       tabBarStyle: {
-        backgroundColor: 'darkturquoise',
+        backgroundColor: Colors.primary,
         position: 'absolute',
         paddingTop: 10,
         borderTopWidth: 0,
@@ -25,11 +26,11 @@ export default function TabLayout() {
         options={{
           title: 'Link Accounts',
           tabBarStyle: {
-            backgroundColor: 'black',
+            backgroundColor: Colors.primary,
             borderTopWidth: 0,
             paddingTop: 10,
           },
-          tabBarActiveTintColor: 'white',
+          tabBarActiveTintColor: Colors.dark,
           tabBarInactiveTintColor: 'gray',
         }}
       />
@@ -38,11 +39,11 @@ export default function TabLayout() {
         options={{
           title: 'Games',
           tabBarStyle: {
-            backgroundColor: 'black',
+            backgroundColor: Colors.primary,
             borderTopWidth: 0,
             paddingTop: 10,
           },
-          tabBarActiveTintColor: 'white',
+          tabBarActiveTintColor: Colors.dark,
           tabBarInactiveTintColor: 'gray',
         }}
       />

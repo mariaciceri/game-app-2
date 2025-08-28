@@ -3,14 +3,16 @@ import { Button, StyleSheet, TextInput, Text, View } from "react-native";
 import { ConsoleGamesResponse } from '@/types/GameTypes';
 import { Colors } from '@/constants/Colors';
 import saveConsoleGames from '@/utils/SaveConsoleGames';
+import saveAccountInfo from '@/utils/AccountStorage';
+import useFetchUserAccount from '@/hooks/fetchUserAccount';
 
-
-//TODO: include feedback message if successfully linked, maybe a clickable to go see the games in games page.
-//TODO: unlink the account button to appear if theres an account registered
+//TODO: maybe a clickable to go see the games in games page.
 
 export default function PlayStationPage() {
     let [username, setUsername] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const { linked, setLinked } = useFetchUserAccount('PS');
+    const { connectedUser, setConnectedUser } = useFetchUserAccount('PS');
 
     const fetchGames = async() => {
         try {
@@ -21,8 +23,11 @@ export default function PlayStationPage() {
                 return;
             }
             const data: ConsoleGamesResponse = await res.json();
+            setConnectedUser(username);
             setUsername('');
+            setLinked(true);
             saveConsoleGames(data, 'PS');
+            saveAccountInfo(username, 'PS');
         } catch (err) {
             console.error(err);
             setError('An error occurred while fetching games. Please try again later.');
@@ -42,11 +47,25 @@ export default function PlayStationPage() {
                     })}
                     value={username}
                 />
-                <Button
-                    title="Fetch Games"
-                    color={'gray'}
-                    onPress={fetchGames}
-                />
+                {!linked && (
+                    <Button
+                        title="Fetch Games"
+                        color={'gray'}
+                        onPress={fetchGames}
+                    />
+                )}
+                {linked && (
+                    <>
+                        <Text style={styles.linkedText}>You are linked as {connectedUser}</Text>
+                        <Button
+                            title="Unlink Account"
+                            color={'gray'}
+                            onPress={() => {
+                                // TODO: Implement unlink account functionality
+                            }}
+                        />
+                    </>
+                )}
             </View>
             <View>
                 {error &&
@@ -66,11 +85,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
     },
+    linkedText: {
+        color: Colors.secondary,
+    },
     textInput: {
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
-        width: '100%',
+        borderRadius: 5,
         minWidth: '100%',
         color: Colors.dark,
         paddingHorizontal: 10

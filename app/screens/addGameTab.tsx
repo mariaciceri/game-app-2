@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
+import { Button, Text, TextInput, View, StyleSheet, Pressable } from 'react-native';
 import GameSuggestions from '@/components/GameSuggestions';
 import GamePicker from '@/components/GamePicker';
 import GameList from '@/components/GameList';
 import useGameSuggestions from "@/hooks/useGameSuggestions";
 import useGames from "@/hooks/useGames";
 import { Game } from "@/types/GameTypes";
+import { Colors } from '@/constants/Colors';
 
 export default function HomeScreen() {
     const { games, addGame, clearGames } = useGames();
@@ -17,6 +18,7 @@ export default function HomeScreen() {
     const [error, setError] = useState<string>('');
     const [selectedGame, setSelectedGame] = useState<string>('');
     const { suggestions, setSuggestions } = useGameSuggestions(selectedGame);
+    const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(true);
 
     const handleAddGame = () => {
         if (!inputText.trim()) return setError("Please enter a game name.");
@@ -41,51 +43,85 @@ export default function HomeScreen() {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: 'black', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontSize: 20, textAlign: 'center', marginBottom: 20 }}>
+        <View style={ styles.container }>
+            <Text style={ styles.title }>
                 Welcome to the Home Screen!
             </Text>
+            
             <TextInput 
                 onChangeText={(text) => {
                     setInputText(text);
                     setSelectedGame(text);
                 }}
-                style={{ width: '80%',
-                    height: 40,
-                    borderColor: 'gray',
-                    borderWidth: 1,
-                    color: 'white',
-                    paddingHorizontal: 10,
-                    marginTop: 20 }}
+                style={ styles.input }
                 placeholder="Enter game name"
                 placeholderTextColor="gray"
                 value={inputText}
                 enterKeyHint='done'
             />
 
-            <GameSuggestions
-                suggestions={suggestions}
-                onSelect={(game) => {
-                    setInputText(game.name);
-                    setBackgroundImage(game.background_image);
+            {isSuggestionsOpen && (
+                <GameSuggestions
+                    suggestions={suggestions}
+                    onSelect={(game) => {
+                        setInputText(game.name);
+                        setBackgroundImage(game.background_image);
                     setGameId(game.id);
                     setSuggestions([]);
                     setSelectedGame('');
                 }}
-            />
+            /> )}
+
 
             <GamePicker gamePlatform={gamePlatform} onSelect={setGamePlatform} />
 
-            <Button title="Add Games" color={'gray'} onPress={handleAddGame} />
+            <Pressable onPress={handleAddGame}>
+                <Text style={styles.addButtonText}>Add Games</Text>
+            </Pressable>
 
-            {error ? <Text style={{ color: 'red', marginTop: 10 }}>{error}</Text> : null}
+            {error ? <Text style={ styles.errorText }>{error}</Text> : null} 
             
             <GameList games={addedGames} setAddedGames={setAddedGames}/>
 
-            <Button title="Remove All Games" color={'red'} onPress={clearGames} />
+            {/* <Button title="Remove All Games" color={'red'} onPress={clearGames} /> */}
         </View>
     );
 }
 
-
-
+const styles = StyleSheet.create({
+    addButtonText: {
+        color: Colors.primary,
+        fontSize: 18,
+        marginVertical: 20,
+        borderColor: Colors.primary,
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 5,
+    },
+    container: { 
+        flex: 1,
+        backgroundColor: "white",
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    errorText: { 
+        color: 'red', 
+        marginTop: 10 
+    },
+    input: {
+        width: '90%',
+        height: 40,
+        borderColor: Colors.dark,
+        borderWidth: 1,
+        color: Colors.secondary,
+        paddingHorizontal: 10,
+        marginTop: 20,
+        borderRadius: 5,
+    },
+    title: { 
+        color: Colors.dark, 
+        fontSize: 20, 
+        textAlign: 'center', 
+        marginVertical: 25,
+    }
+});

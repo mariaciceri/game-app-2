@@ -34,5 +34,5 @@ export default function useGameSuggestions(selectedGame: string) {
         return () => clearTimeout(timeout);
     }, [selectedGame]);
 
-    return { suggestions, setSuggestions, error };
+    return { suggestions, setSuggestions };
 }

@@ -3,7 +3,7 @@ import { Button, StyleSheet, TextInput, Text, View } from "react-native";
 import { ConsoleGamesResponse } from '@/types/GameTypes';
 import { Colors } from '@/constants/Colors';
 import saveConsoleGames from '@/utils/SaveConsoleGames';
-import saveAccountInfo from '@/utils/AccountStorage';
+import { saveAccountInfo, unlinkAccountInfo, deletePlatformGames } from '@/utils/AccountStorage';
 import useFetchUserAccount from '@/hooks/fetchUserAccount';
 
 //TODO: maybe a clickable to go see the games in games page.
@@ -60,7 +60,10 @@ export default function PlayStationPage() {
                             title="Unlink Account"
                             color={'gray'}
                             onPress={() => {
-                                // TODO: Implement unlink account functionality
+                                unlinkAccountInfo('PS');
+                                setConnectedUser('');
+                                setLinked(false);
+                                deletePlatformGames('PS');
                             }}
                         />
                     </>
@@ -68,7 +71,7 @@ export default function PlayStationPage() {
             </View>
             <View>
                 {error &&
-                    (<Text style={ styles.error}>{error}</Text>)
+                    (<Text style={ styles.error }>{error}</Text>)
                 }
             </View>
         </>

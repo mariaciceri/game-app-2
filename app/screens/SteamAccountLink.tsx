@@ -4,7 +4,7 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { SteamGamesResponse } from "@/types/GameTypes";
 import saveSteamGames from "@/utils/SaveSteamGames";
 import { Colors } from "@/constants/Colors";
-import saveAccountInfo from '@/utils/AccountStorage';
+import { saveAccountInfo, unlinkAccountInfo, deletePlatformGames } from '@/utils/AccountStorage';
 import useFetchUserAccount from '@/hooks/fetchUserAccount';
 
 
@@ -62,8 +62,10 @@ export default function SteamPage() {
                             title="Unlink Account"
                             color={'gray'}
                             onPress={() => {
-                                // TODO: Implement unlink account functionality
-                            }}
+                                unlinkAccountInfo('Steam');
+                                setConnectedUser('');
+                                setLinked(false);
+                                deletePlatformGames('Steam');                            }}
                         />
                     </>
                 )}            

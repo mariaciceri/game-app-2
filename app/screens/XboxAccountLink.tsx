@@ -3,7 +3,7 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { ConsoleGamesResponse } from '@/types/GameTypes';
 import { Colors } from '@/constants/Colors';
 import saveConsoleGames from '@/utils/SaveConsoleGames';
-import saveAccountInfo from '@/utils/AccountStorage';
+import { saveAccountInfo, unlinkAccountInfo, deletePlatformGames } from '@/utils/AccountStorage';
 import useFetchUserAccount from '@/hooks/fetchUserAccount';
 
 export default function XboxPage() {
@@ -58,8 +58,10 @@ export default function XboxPage() {
                             title="Unlink Account"
                             color={'gray'}
                             onPress={() => {
-                                // TODO: Implement unlink account functionality
-                            }}
+                                unlinkAccountInfo('XBox');
+                                setConnectedUser('');
+                                setLinked(false);
+                                deletePlatformGames('XBox');                            }}
                         />
                     </>
                 )}

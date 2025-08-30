@@ -8,7 +8,7 @@ import useGames from "@/hooks/useGames";
 import { Game } from "@/types/GameTypes";
 import { Colors } from '@/constants/Colors';
 
-export default function HomeScreen() {
+export default function AddGameScreen() {
     const { games, addGame, clearGames } = useGames();
     const [addedGames, setAddedGames] = useState<Record<string, Game[]>>({});
     const [inputText, setInputText] = useState<string>('');
@@ -40,6 +40,8 @@ export default function HomeScreen() {
         setBackgroundImage("");
         setGameId(0);
         setSelectedGame("");
+        setIsSuggestionsOpen(false);
+        setSuggestions([]);
     };
 
     return (
@@ -48,10 +50,11 @@ export default function HomeScreen() {
                 Welcome to the Home Screen!
             </Text>
             
-            <TextInput 
+            <TextInput
                 onChangeText={(text) => {
                     setInputText(text);
                     setSelectedGame(text);
+                    setIsSuggestionsOpen(true);
                 }}
                 style={ styles.input }
                 placeholder="Enter game name"
@@ -61,16 +64,23 @@ export default function HomeScreen() {
             />
 
             {isSuggestionsOpen && (
-                <GameSuggestions
-                    suggestions={suggestions}
-                    onSelect={(game) => {
-                        setInputText(game.name);
-                        setBackgroundImage(game.background_image);
-                    setGameId(game.id);
-                    setSuggestions([]);
-                    setSelectedGame('');
-                }}
-            /> )}
+                <>
+                    <Pressable 
+                        onPress={() => setIsSuggestionsOpen(false)}
+                        style={ styles.clickOutside }
+                    >
+                    </Pressable>
+                    <GameSuggestions
+                        suggestions={suggestions}
+                        onSelect={(game) => {
+                            setInputText(game.name);
+                            setBackgroundImage(game.background_image);
+                        setGameId(game.id);
+                        setSuggestions([]);
+                        setSelectedGame('');
+                    }}
+                    /> 
+                </>)}
 
 
             <GamePicker gamePlatform={gamePlatform} onSelect={setGamePlatform} />
@@ -97,6 +107,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderRadius: 5,
+    },
+    clickOutside: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
     },
     container: { 
         flex: 1,

@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, Text, View, Image, Button, StyleSheet, Pressable } from "react-native";
+import { ScrollView, Text, View, StyleSheet } from "react-native";
 import { Game } from "@/types/GameTypes";
 import useGames from "@/hooks/useGames";
 import { Colors } from "@/constants/Colors";
@@ -61,6 +61,7 @@ export default function GameList({games, setAddedGames} : Props) {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         width: '90%',
         marginTop: 20,
     },
@@ -92,9 +93,9 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         padding: 10,
-        margin: 10,
         backgroundColor: Colors.light,
         fontSize: 14,
+        width: '100%',
     },
     platformText: {
         color: Colors.dark,

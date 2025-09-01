@@ -1,21 +1,17 @@
 import React from "react";
 import { ScrollView, Text, View, StyleSheet } from "react-native";
-import { Game } from "@/types/GameTypes";
 import { Colors } from "@/constants/Colors";
 import GameItem from "./GameItem";
+import { useGamesContext } from '@/context/GameContext';
 
-type Props = {
-    games: Record<string, Game[]>;
-    onDelete: (platform: string, appid: number | string ) => void;
-}
-
-export default function GameList({games, onDelete} : Props) {
+export default function GameList() {
+    const { addedGames, deleteGame } = useGamesContext();
 
     return (
         <ScrollView style={ styles.container }>
             <View style={ styles.innerView }>
-                {Object.keys(games).length > 0 ? (
-                    Object.entries(games).map(([platform, gameList]) => (
+                {Object.keys(addedGames).length > 0 ? (
+                    Object.entries(addedGames).map(([platform, gameList]) => (
                         <View key={platform} style={ styles.platformContainer }>
                             <Text style={ styles.platformText }>
                                 {platform}:
@@ -26,7 +22,7 @@ export default function GameList({games, onDelete} : Props) {
                                     key={game.appid}
                                     game={game}
                                     platform={platform}
-                                    onDelete={onDelete}
+                                    onDelete={deleteGame}
                                     />
                             ))}
                         </View>

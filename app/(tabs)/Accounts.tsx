@@ -1,10 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import  { Colors } from "@/constants/Colors";
 import PlayStationPage from "../screens/PlayStationAccountLink";
 import XboxPage from "../screens/XboxAccountLink";
 import SteamPage from "../screens/SteamAccountLink";
-
 
 export default function Accounts() {
   return (
@@ -13,7 +11,7 @@ export default function Accounts() {
         <Text style={styles.title}>Connected Accounts</Text>
         <Text style={styles.description}>Manage your connected accounts here.</Text>
       </View>
-      <PlayStationPage />
+      <PlayStationPage/>
       <XboxPage />
       <SteamPage />
     </View>

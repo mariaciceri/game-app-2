@@ -4,16 +4,16 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { SteamGamesResponse } from "@/types/GameTypes";
 import saveSteamGames from "@/utils/SaveSteamGames";
 import { Colors } from "@/constants/Colors";
-import { saveAccountInfo, unlinkAccountInfo, deletePlatformGames } from '@/utils/AccountStorage';
 import useFetchUserAccount from '@/hooks/fetchUserAccount';
-
+import { useGamesContext } from '@/context/GameContext';
 
 export default function SteamPage() {
 
     let [userId, setUserId] = useState<string>('');
     const [error, setError] = useState<string>('');
     const { connectedUser, setConnectedUser, linked, setLinked } = useFetchUserAccount('Steam');
-
+    const { saveGames, saveAccountInfo, unlinkAccountInfo, deletePlatformGames } = useGamesContext();
+    
     //TODO : Add a loading state to show a spinner while fetching games
     const fetchGames = async () => {
         try {
@@ -25,7 +25,8 @@ export default function SteamPage() {
             }
             const data: SteamGamesResponse = await res.json();
             setConnectedUser(userId);
-            saveSteamGames(data);
+            const updatedGames = await saveSteamGames(data);
+            await saveGames(updatedGames);
             setLinked(true);
             saveAccountInfo(userId, 'Steam');
             setUserId('');

@@ -2,21 +2,15 @@ import React from 'react';
 import { Text, SafeAreaView, StyleSheet, View } from 'react-native';
 import AllGameList from '@/components/AllGameList';
 import { Colors } from '@/constants/Colors';
-import { Game } from '@/types/GameTypes';
 
-type Props = {
-    games: Record<string, Game[]>;
-    deleteGame: (platform: string, appid: number | string) => void;
-}
-
-export default function AllGamesScreen({ games, deleteGame }: Props ) {  
+export default function AllGamesScreen() {  
     return (
         <SafeAreaView style={ styles.container }>
             <Text style={ styles.title }>
                 Browse all games in your collection! If something is missing, add it in the "Add Game" tab.
             </Text>
             <View style={ styles.horizontalRule }></View>
-            <AllGameList games={games} onDelete={deleteGame}/>
+            <AllGameList/>
         </SafeAreaView>
     );
 }

@@ -4,12 +4,10 @@ import { SafeAreaView, StatusBar } from "react-native";
 import AddGameScreen from '../screens/addGameTab';
 import { Colors } from '@/constants/Colors';
 import AllGamesScreen from '../screens/allGamesTab';
-import useGames from '@/hooks/useGames';
 const Tab = createMaterialTopTabNavigator();
 
 function MyTabs() {
-    const { games, addGame, deleteGame, clearGames } = useGames();
-    
+
     return (
         <>
             <StatusBar backgroundColor={Colors.light} />
@@ -28,12 +26,8 @@ function MyTabs() {
                         backgroundColor: Colors.secondary,
                     },
             }}>
-                <Tab.Screen name="All Games">
-                    {() => <AllGamesScreen games={games} deleteGame={deleteGame} />}
-                </Tab.Screen>
-                <Tab.Screen name="Add Game">
-                    {() => <AddGameScreen games={games} addGame={addGame} deleteGame={deleteGame} />}
-                </Tab.Screen>
+                <Tab.Screen name="All Games" component={AllGamesScreen} />
+                <Tab.Screen name="Add Game" component={AddGameScreen} />
             </Tab.Navigator>
         </>
     );

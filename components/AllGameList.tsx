@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { StyleSheet } from "react-native";
-import { Game } from "@/types/GameTypes";
 import PlatformSection from "./PlatformSection";
 import { Colors } from "@/constants/Colors";
+import { useGamesContext } from "@/context/GameContext";
 
-type Props = {
-    games: Record<string, Game[]>;
-    onDelete: (platform: string, appid: number | string) => void;
-}
-
-export default function AllGameList({games, onDelete} : Props) {
+export default function AllGameList() {
     const [isOpen, setIsOpen] = useState<Record<string, boolean>>({'PS': false, 'Steam': false, 'XBox': false});
+    const { games, deleteGame } = useGamesContext();
 
     return (
         <ScrollView style={ styles.container }>
@@ -25,7 +21,7 @@ export default function AllGameList({games, onDelete} : Props) {
                                 gameList={gameList}
                                 isOpen={isOpen}
                                 onToggle={() => setIsOpen({ ...isOpen, [platform]: !isOpen[platform] })}
-                                onDelete={onDelete}                          
+                                onDelete={deleteGame}                          
                             />
                         )
                     })

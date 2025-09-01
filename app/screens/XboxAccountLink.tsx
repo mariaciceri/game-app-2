@@ -3,14 +3,16 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { ConsoleGamesResponse } from '@/types/GameTypes';
 import { Colors } from '@/constants/Colors';
 import saveConsoleGames from '@/utils/SaveConsoleGames';
-import { saveAccountInfo, unlinkAccountInfo, deletePlatformGames } from '@/utils/AccountStorage';
 import useFetchUserAccount from '@/hooks/fetchUserAccount';
+import { useGamesContext } from '@/context/GameContext';
+
 
 export default function XboxPage() {
     let [username, setUsername] = useState<string>('');
     const [error, setError] = useState<string>('');
     const { connectedUser, setConnectedUser, linked, setLinked } = useFetchUserAccount('XBox');
-
+    const { saveGames, saveAccountInfo, unlinkAccountInfo, deletePlatformGames } = useGamesContext();
+    
     const fetchGames = async () => {
         try {
             setError('');
@@ -23,7 +25,8 @@ export default function XboxPage() {
             setConnectedUser(username);
             setUsername('');
             setLinked(true);
-            saveConsoleGames(data, 'XBox');
+            const updatedGames = await saveConsoleGames(data, 'XBox');
+            await saveGames(updatedGames);
             saveAccountInfo(username, 'XBox');
         } catch (err) {
             console.error(err);

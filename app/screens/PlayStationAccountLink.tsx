@@ -3,8 +3,8 @@ import { Button, StyleSheet, TextInput, Text, View } from "react-native";
 import { ConsoleGamesResponse } from '@/types/GameTypes';
 import { Colors } from '@/constants/Colors';
 import saveConsoleGames from '@/utils/SaveConsoleGames';
-import { saveAccountInfo, unlinkAccountInfo, deletePlatformGames } from '@/utils/AccountStorage';
 import useFetchUserAccount from '@/hooks/fetchUserAccount';
+import { useGamesContext } from '@/context/GameContext';
 
 //TODO: maybe a clickable to go see the games in games page.
 
@@ -12,6 +12,7 @@ export default function PlayStationPage() {
     let [username, setUsername] = useState<string>('');
     const [error, setError] = useState<string>('');
     const { connectedUser, setConnectedUser, linked, setLinked } = useFetchUserAccount('PS');
+    const { saveGames, saveAccountInfo, unlinkAccountInfo, deletePlatformGames } = useGamesContext();
 
     const fetchGames = async() => {
         try {
@@ -25,7 +26,8 @@ export default function PlayStationPage() {
             setConnectedUser(username);
             setUsername('');
             setLinked(true);
-            saveConsoleGames(data, 'PS');
+            const updatedGames = await saveConsoleGames(data, 'PS');
+            await saveGames(updatedGames);
             saveAccountInfo(username, 'PS');
         } catch (err) {
             console.error(err);

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { getAccountInfo, removeAllGames, setGameList } from "@/utils/AsyncStorage";
+import { getAccountInfo, setAccountInfo, setGameList } from "@/utils/AsyncStorage";
 import { Game } from "@/types/GameTypes";
 
 export default function useGames() {
     const [games, setGames] = useState<Record<string, Game[]>>({});
+    const [addedGames, setAddedGames] = useState<Record<string, Game[]>>({});
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -21,37 +22,79 @@ export default function useGames() {
 
     const saveGames = async (updatedGames: Record<string, Game[]>) => {
         try {
-            await setGameList("games", updatedGames);
             setGames(updatedGames);
+            await setGameList("games", updatedGames);
         } catch {
             setError("Error saving games.");
         }
     }
 
     const addGame = async (platform: string, game: Game) => {
+        const allAddedGames = { 
+            ...addedGames,
+            [platform]: [...(addedGames[platform] || []), game]
+        }
+        setAddedGames(allAddedGames);
+
         const updatedGames = {
             ...games,
             [platform]: [...(games[platform] || []), game],
         };
-        saveGames(updatedGames);
+        await saveGames(updatedGames);
     };
 
     const deleteGame = async (platform: string, appid: number | string) => {
         const updatedGames = { ...games };
-        if (updatedGames[platform]) {
-            updatedGames[platform] = updatedGames[platform].filter(game => game.appid !== appid);
-            if (updatedGames[platform].length === 0) {
-                delete updatedGames[platform];
-            }
+
+        updatedGames[platform] = updatedGames[platform].filter(game => game.appid !== appid);
+        if (updatedGames[platform].length === 0) {
+            delete updatedGames[platform];
         }
-        saveGames(updatedGames);
+        
+        await saveGames(updatedGames);
+        const allAddedGames = { ...addedGames };
+
+        allAddedGames[platform] = allAddedGames[platform]?.filter(game => game.appid !== appid) || [];
+        if (allAddedGames[platform].length === 0) {
+            delete allAddedGames[platform];
+        }
+        setAddedGames(allAddedGames);
     }
 
-    const clearGames = async () => {
-        //include removing saved accounts as well
-        await removeAllGames();
-        setGames({});
-    };
+    const saveAccountInfo = async (account: string, platform: string) => {
+        try {
+            const currentAccounts = await getAccountInfo('accounts');
+            const updatedAccount = { ...(currentAccounts || {}), [platform]: account };
+            await setAccountInfo('accounts', updatedAccount);
+        }
+        catch (err) {
+            console.error('Error managing account info:', err);
+        }
+    }
 
-    return { games, error, addGame, deleteGame, clearGames };
+    const unlinkAccountInfo = async (platform: string) => {
+        try {
+            const currentAccounts = await getAccountInfo('accounts');
+            delete currentAccounts?.[platform];
+            await setAccountInfo('accounts', currentAccounts || {});
+        } catch (err) {
+            console.error('Error unlinking account info:', err);
+        }
+    }
+
+    const deletePlatformGames = async (platform: string) => {
+        try {
+            const currentGames = await getAccountInfo('games');
+            delete currentGames?.[platform];
+            await setGameList('games', currentGames || {});
+            setGames(currentGames);
+            const allAddedGames = { ...addedGames };
+            delete allAddedGames[platform];
+            setAddedGames(allAddedGames);
+        } catch (err) {
+            console.error('Error deleting platform games:', err);
+        }
+    }
+
+    return { games,addedGames, error, addGame, deleteGame, saveGames, saveAccountInfo, unlinkAccountInfo, deletePlatformGames};
 }

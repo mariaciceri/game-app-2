@@ -7,23 +7,33 @@ export default function useGames() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        (async () => {
-            try {
-                const storedGames = await getAccountInfo("games");
-                setGames(storedGames || {});
-            } catch {
-                setError("Error fetching games.");
-            }
-        })();
+        loadGames();
     }, []);
+
+    const loadGames = async () => {
+        try {
+            const storedGames = await getAccountInfo("games");
+            setGames(storedGames || {});
+        } catch {
+            setError("Error fetching games.");
+        }
+    }
+
+    const saveGames = async (updatedGames: Record<string, Game[]>) => {
+        try {
+            await setGameList("games", updatedGames);
+            setGames(updatedGames);
+        } catch {
+            setError("Error saving games.");
+        }
+    }
 
     const addGame = async (platform: string, game: Game) => {
         const updatedGames = {
             ...games,
             [platform]: [...(games[platform] || []), game],
         };
-        setGames(updatedGames);
-        await setGameList("games", updatedGames);
+        saveGames(updatedGames);
     };
 
     const deleteGame = async (platform: string, appid: number | string) => {
@@ -34,11 +44,11 @@ export default function useGames() {
                 delete updatedGames[platform];
             }
         }
-        setGames(updatedGames);
-        await setGameList("games", updatedGames);
+        saveGames(updatedGames);
     }
 
     const clearGames = async () => {
+        //include removing saved accounts as well
         await removeAllGames();
         setGames({});
     };

@@ -7,9 +7,10 @@ import { Colors } from "@/constants/Colors";
 
 type Props = {
     games: Record<string, Game[]>;
+    onDelete: (platform: string, appid: number | string) => void;
 }
 
-export default function AllGameList({games} : Props) {
+export default function AllGameList({games, onDelete} : Props) {
     const [isOpen, setIsOpen] = useState<Record<string, boolean>>({'PS': false, 'Steam': false, 'XBox': false});
 
     return (
@@ -23,7 +24,8 @@ export default function AllGameList({games} : Props) {
                                 platform={platform}
                                 gameList={gameList}
                                 isOpen={isOpen}
-                                onToggle={() => setIsOpen({ ...isOpen, [platform]: !isOpen[platform] })}                            
+                                onToggle={() => setIsOpen({ ...isOpen, [platform]: !isOpen[platform] })}
+                                onDelete={onDelete}                          
                             />
                         )
                     })

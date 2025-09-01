@@ -10,9 +10,10 @@ type Props = {
     gameList: any[];
     isOpen: Record<string, boolean>;
     onToggle: () => void;
+    onDelete: (platform: string, appid: number | string) => void;
 }
 
-export default function PlatformSection({ platform, gameList, isOpen, onToggle } : Props ) {
+export default function PlatformSection({ platform, gameList, isOpen, onToggle, onDelete } : Props ) {
     const typedPlatform = platform as Platform;
     
     return (
@@ -32,6 +33,7 @@ export default function PlatformSection({ platform, gameList, isOpen, onToggle }
                         key={game.appid}
                         game={game}
                         platform={platform}
+                        onDelete={onDelete}
                     />
                 ))
             }

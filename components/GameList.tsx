@@ -1,36 +1,15 @@
 import React from "react";
 import { ScrollView, Text, View, StyleSheet } from "react-native";
 import { Game } from "@/types/GameTypes";
-import useGames from "@/hooks/useGames";
 import { Colors } from "@/constants/Colors";
 import GameItem from "./GameItem";
 
 type Props = {
     games: Record<string, Game[]>;
-    setAddedGames: React.Dispatch<React.SetStateAction<Record<string, Game[]>>>;
+    onDelete: (platform: string, appid: number | string ) => void;
 }
 
-export default function GameList({games, setAddedGames} : Props) {
-    const { deleteGame } = useGames();
-
-    // Copy this for updating UI and async storage
-    const handleDelete = (platform: string, appid: number | string) => {
-        deleteGame(platform, appid);
-
-        setAddedGames(prev => {
-            const updated = {
-                ...prev,
-                [platform]: (prev[platform] || []).filter(game => game.appid !== appid)
-            };
-
-            if (updated[platform].length === 0) {
-                delete updated[platform];
-            }
-
-            return updated;
-        });
-    };
-
+export default function GameList({games, onDelete} : Props) {
 
     return (
         <ScrollView style={ styles.container }>
@@ -47,7 +26,8 @@ export default function GameList({games, setAddedGames} : Props) {
                                     key={game.appid}
                                     game={game}
                                     platform={platform}
-                                />
+                                    onDelete={onDelete}
+                                    />
                             ))}
                         </View>
                     ))

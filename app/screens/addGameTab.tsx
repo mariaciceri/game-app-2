@@ -4,13 +4,16 @@ import GameSuggestions from '@/components/GameSuggestions';
 import GamePicker from '@/components/GamePicker';
 import GameList from '@/components/GameList';
 import useGameSuggestions from "@/hooks/useGameSuggestions";
-import useGames from "@/hooks/useGames";
 import { Game } from "@/types/GameTypes";
 import { Colors } from '@/constants/Colors';
 
-export default function AddGameScreen() {
-    const { games, addGame, clearGames } = useGames();
-    const [addedGames, setAddedGames] = useState<Record<string, Game[]>>({});
+type Props = {
+    games: Record<string, Game[]>;
+    addGame: (platform: string, game: Game) => void;
+    deleteGame: (platform: string, appid: number | string) => void;
+}
+
+export default function AddGameScreen({ games, addGame, deleteGame }: Props ) {
     const [inputText, setInputText] = useState<string>('');
     const [backgroundImage, setBackgroundImage] = useState<string>('');
     const [gameId, setGameId] = useState<number>(0);
@@ -28,14 +31,9 @@ export default function AddGameScreen() {
 
         const finalGameId = gameId || Date.now();
         const game: Game = { appid: Number(finalGameId), name: inputText, logo: backgroundImage }
-        const addedGame = {
-            ...addedGames,
-            [gamePlatform]: [...(addedGames[gamePlatform] || []), game]
-        };
 
         setError("");
         addGame(gamePlatform, game);
-        setAddedGames(addedGame);
         setInputText("");
         setBackgroundImage("");
         setGameId(0);
@@ -91,7 +89,7 @@ export default function AddGameScreen() {
 
             {error ? <Text style={ styles.errorText }>{error}</Text> : null} 
             
-            <GameList games={addedGames} setAddedGames={setAddedGames}/>
+            <GameList games={games} onDelete={deleteGame}/>
 
             {/* <Button title="Remove All Games" color={'red'} onPress={clearGames} /> */}
         </View>

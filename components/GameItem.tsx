@@ -1,16 +1,14 @@
 import { Text, View, Image, Pressable } from "react-native";
 import { StyleSheet } from "react-native";
-import useGames from "@/hooks/useGames";
 import { Game } from "@/types/GameTypes";
 import { Colors } from "@/constants/Colors";
 
 type Props = {
     game: Game;
     platform: string;
-}
+    onDelete: (platform: string, appid: number | string ) => void;}
 
-export default function GameItem({ game, platform }: Props) {
-    const { deleteGame } = useGames();
+export default function GameItem({ game, platform , onDelete}: Props) {
 
     return (
         <View style={ styles.gameView }>
@@ -20,7 +18,7 @@ export default function GameItem({ game, platform }: Props) {
             />
             <Text style={ styles.gameName }>{ game.name }</Text>
             <Pressable style={ styles.button }
-                onPress={() => deleteGame(platform, game.appid)}>
+                onPress={() => onDelete(platform, game.appid)}>
                 <Text style={ styles.buttonText }>x</Text>
             </Pressable>
         </View>
